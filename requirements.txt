@@ -1,6 +1,3 @@
 fastapi
-pydantic
-typing
-typing_extensions
 uvicorn
 pandas
