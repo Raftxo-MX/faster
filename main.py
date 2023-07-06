@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
-from unicodedata import unidecode
+from unidecode import unidecode
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 from datetime import datetime
