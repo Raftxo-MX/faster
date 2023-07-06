@@ -11,7 +11,7 @@ app = FastAPI()
 
 
 # cargo el dataset limpio
-df = pd.read_csv('movie_dataset_clean.csv')
+df = pd.read_csv('movie_dataset_clean(by_alexDRandom).csv')
 
 
 @app.get('/')
@@ -24,7 +24,8 @@ def index():
            'mail/github': 'raftxo.mx@gmail.com', 
            }
 
-
+'''
+# Esqueleto funciones PI01 DTS-12
 @app.get('/peliculas_idioma/{idioma}')
 def peliculas_idioma(idioma:str):
     '''Ingresas el idioma, retornando la cantidad de peliculas producidas en el mismo'''
@@ -66,7 +67,7 @@ def recomendacion(titulo:str):
     return {'lista recomendada': respuesta}
 
 # =====================
-
+'''
 
 @app.get('/peliculas_mes/{mes}')
 def peliculas_mes(mes: str):
