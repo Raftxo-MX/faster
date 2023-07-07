@@ -11,7 +11,7 @@ app = FastAPI()
 
 
 # cargo el dataset limpio
-df = pd.read_feather('./datos_limpios.feather')
+df = pd.read_feather('datos_limpios.feather')
 
 
 @app.get('/')
@@ -29,57 +29,30 @@ def index():
 @app.get('/peliculas_idioma/{idioma}')
 def peliculas_idioma(idioma:str):
     '''
-    Ingresa el idioma en formato.
+    Ingresa el idioma en formato abreviado conforme la norma internacional ISO 639-1. 
+    Los idiomas más populares son:
+        "en" corresponde a inglés (English).
+        "fr" corresponde a francés (French).
+        "it" corresponde a italiano (Italian).
+        "ja" corresponde a japonés (Japanese).
+        "de" corresponde a alemán (German).
+        "es" corresponde a español (Spanish).
+        "ru" corresponde a ruso (Russian).
+        "hi" corresponde a hindi (Hindi).
+        "ko" corresponde a coreano (Korean).
+        "zh" corresponde a chino (Chinese).
+        "pl" corresponde a polaco (Polish)
+        "ar" corresponde a argentino viste...
 
-    Args:
-        mes (str): El nombre del mes para el cual se desea obtener la información. 
-        Puede ser el nombre del mes en inglés o en español.
-
-    Returns:
-        dict: Un diccionario que contiene el nombre del mes (en formato capitalizado), 
-        y la cantidad de películas que se estrenaron en ese mes.
+    La función devolverá:
+        Un diccionario {'idioma':idioma, 'cantidad':respuesta}.
 
     '''
-    # diccionario de mapeo de meses en inglés a español
-    meses_ingles = {
-        'January': 'enero',
-        'February': 'febrero',
-        'March': 'marzo',
-        'April': 'abril',
-        'May': 'mayo',
-        'June': 'junio',
-        'July': 'julio',
-        'August': 'agosto',
-        'September': 'septiembre',
-        'October': 'octubre',
-        'November': 'noviembre',
-        'December': 'diciembre'
-    }
-    
-    # diccionario de mapeo de meses en español a inglés
-    meses_espanol = {v: k for k, v in meses_ingles.items()}
-    
-    # convertir la columna 'release_date' a tipo fecha
-    df['release_date'] = pd.to_datetime(df['release_date'])
-
-    # obtener el nombre del mes en minúsculas
-    df['mes'] = df['release_date'].dt.month_name().str.lower()
-    
-    # verificar si se proporcionó el mes en español
-    if mes.lower() in meses_espanol:
-        # filtrar el DataFrame por el mes en inglés correspondiente
-        df_mes = df[df['mes'] == meses_espanol[mes.lower()].lower()]
-        nombre_mes = mes.capitalize()
-    else:
-        # filtrar el DataFrame por el mes en inglés
-        df_mes = df[df['mes'] == mes.lower()]
-        nombre_mes = meses_ingles[df_mes['mes'].iloc[0]].capitalize()
-    
-    # obtener la cantidad de películas para ese mes
-    cantidad = len(df_mes)
-
-    
-    return {'mes': nombre_mes, 'cantidad': cantidad}
+    df_filtrado=df[df['original_language']==idioma]
+    cantidad=len(df_filtrado)
+    respuesta = {'idioma':idioma, 'cantidad':cantidad}
+  
+    return respuesta
 
 
 @app.get('/peliculas_dia/{dia}')
