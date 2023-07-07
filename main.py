@@ -11,23 +11,25 @@ app = FastAPI()
 
 
 # cargo el dataset limpio
-df = pd.read_csv('movie_dataset_clean(by_alexDRandom).csv')
+df = pd.read_feather('./datos_limpios.feather')
 
 
 @app.get('/')
 def index():   
-    return {'message': '尺闩ﾁ七〤ㄖ ﾁ闩丂セ 闩尸讠',
-           'description': 'Implementación en Render de la API con FastAPI',
+    return {   'message': '尺闩ﾁ七〤ㄖ ﾁ闩丂セ 闩尸讠',
+           'description': 'Implementación de la API con FastAPI en Render',
           'organization': 'soyHENRY.com',
                'carreer': 'soyHenry bootcamp DATA SCIENCE',
+               'project': 'PI01_MLops',
+                'cohort': 'DTS-12',
                'student': 'Rafal Janusz Wysocki',
            'mail/github': 'raftxo.mx@gmail.com', 
            }
 
-@app.get('/peliculas_mes/{mes}')
-def peliculas_mes(mes: str):
+@app.get('/peliculas_idioma/{idioma}')
+def peliculas_idioma(idioma:str):
     '''
-    Retorna la cantidad de películas que se estrenaron en un mes específico.
+    Ingresa el idioma en formato.
 
     Args:
         mes (str): El nombre del mes para el cual se desea obtener la información. 
