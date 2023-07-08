@@ -55,53 +55,6 @@ def peliculas_idioma(idioma:str):
     return respuesta
 
 
-@app.get('/peliculas_dia/{dia}')
-def peliculas_dia(dia: str):
-    '''
-    Retorna la cantidad de películas que se estrenaron en un día de la semana específico.
-
-    Args:
-        dia (str): El nombre del día de la semana para el cual se desea obtener la información. 
-        Puede ser el nombre del día en inglés o en español.
-
-    Returns:
-        dict: Un diccionario que contiene el nombre del día de la semana (en formato capitalizado), 
-        y la cantidad de películas que se estrenaron en ese día.
-
-    '''
-    
-    # diccionario de mapeo de días en inglés a español
-    dias_ingles = {
-        'Monday': 'lunes',
-        'Tuesday': 'martes',
-        'Wednesday': 'miércoles',
-        'Thursday': 'jueves',
-        'Friday': 'viernes',
-        'Saturday': 'sábado',
-        'Sunday': 'domingo'
-    }
-    
-    # diccionario de mapeo de días en español a inglés
-    dias_espanol = {unidecode(v): k for k, v in dias_ingles.items()}
-    
-    # convertir la columna 'release_date' a tipo fecha
-    df['release_date'] = pd.to_datetime(df['release_date'])
-    
-    # obtener el día de la semana para cada fecha en inglés
-    df['day_of_week'] = df['release_date'].dt.day_name()
-    
-    # filtrar el DataFrame por el día de la semana especificado en español
-    df_dia = df[df['day_of_week'] == dias_espanol[unidecode(dia.lower())]]
-    
-    # obtener el nombre del día de la semana en formato capitalizado
-    nombre_dia = dia.capitalize()
-
-    # obtener la cantidad de películas para ese día
-    cantidad = len(df_dia)
-
-    return {'dia_semana': nombre_dia, 'cantidad': cantidad}
-
-
 @app.get('/franquicia/{franquicia}')
 def franquicia(franquicia):
     '''
@@ -115,6 +68,12 @@ def franquicia(franquicia):
         la cantidad de películas en la franquicia,
         la ganancia total de la franquicia formateada con separadores de miles, 
         y la ganancia promedio de la franquicia formateada con separadores de miles.
+
+        ['index', 'id', 'budget', 'original_language', 'overview', 'popularity',
+       'release_date', 'revenue', 'runtime', 'spoken_languages', 'status',
+       'tagline', 'title', 'vote_average', 'vote_count', 'return',
+       'release_year', 'directed_by', 'franchise', 'produced_by',
+       'produced_in', 'genres_clean']
     
     '''
 
@@ -146,7 +105,7 @@ def peliculas_pais(pais):
     '''
 
     # filtrar las películas producidas en el país especificado
-    peliculas_pais = df[df['production_countries'].str.contains(pais, case=False, na=False)]
+    peliculas_pais = df[df['produced_in'].str.contains(pais, case=False, na=False)]
 
     # obtener la cantidad de películas producidas en ese país
     cantidad = len(peliculas_pais)
@@ -169,8 +128,8 @@ def productoras(productora:str):
     
     '''
 
-# filtrar el DataFrame por las filas que contienen la productora especificada en la columna 'production_companies'
-    filtered_df = df[df['production_companies'].str.contains(productora, case=False, na=False)]
+# filtrar el DataFrame por las filas que contienen la productora especificada en la columna 'produced_by'
+    filtered_df = df[df['produced_by'].str.contains(productora, case=False, na=False)]
 
     
     # calcular el total de 'revenue' y se cuenta el numero de peliculas 
@@ -233,15 +192,15 @@ def preprocess_text(text):
     
     return text
 
-# preprocesado de las columnas overview, tagline, genres y belong_to_collection
-df['processed_text'] = df['overview'] + ' ' + df['tagline'] + ' ' + df['franchise'] + ' ' + df['genres']
+# preprocesado de las columnas overview, tagline, genres_clean y franchise
+df['processed_text'] = df['overview'] + ' ' + df['tagline'] + ' ' + df['franchise'] + ' ' + df['genres_clean']
 df['processed_text'] = df['processed_text'].map(preprocess_text)
 
 # calcula TF-IDF matrix
 tfidf = TfidfVectorizer(stop_words='english')
 tfidf_matrix_alpha = tfidf.fit_transform(df['processed_text'])
 tfidf_matrix_beta = tfidf.fit_transform(df['title']) / 1.5
-tfidf_matrix_gama = tfidf.fit_transform(df['genres']) * 1.15
+tfidf_matrix_gama = tfidf.fit_transform(df['genres_clean']) * 1.15
 
 tfidf_matrix = sp.hstack([tfidf_matrix_alpha, tfidf_matrix_beta, tfidf_matrix_gama]).tocsr()
 
