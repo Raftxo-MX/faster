@@ -29,23 +29,23 @@ def index():
 @app.get('/peliculas_idioma/{idioma}')
 def peliculas_idioma(idioma:str):
     '''
-    Ingresa el idioma en formato abreviado conforme la norma internacional ISO 639-1. 
-    Los idiomas más populares son:
-        "en" corresponde a inglés (English).
-        "fr" corresponde a francés (French).
-        "it" corresponde a italiano (Italian).
-        "ja" corresponde a japonés (Japanese).
-        "de" corresponde a alemán (German).
-        "es" corresponde a español (Spanish).
-        "ru" corresponde a ruso (Russian).
-        "hi" corresponde a hindi (Hindi).
-        "ko" corresponde a coreano (Korean).
-        "zh" corresponde a chino (Chinese).
-        "pl" corresponde a polaco (Polish)
-        "ar" corresponde a argentino viste...
-
-    La función devolverá:
-        Un diccionario {'idioma':idioma, 'cantidad':respuesta}.
+    Ingresa el idioma en formato abreviado conforme la norma internacional ISO 639-1.<br> 
+    Los idiomas más populares son:<br>
+        "en" corresponde a inglés (English).<br>
+        "fr" corresponde a francés (French).<br>
+        "it" corresponde a italiano (Italian).<br>
+        "ja" corresponde a japonés (Japanese).<br>
+        "de" corresponde a alemán (German).<br>
+        "es" corresponde a español (Spanish).<br>
+        "ru" corresponde a ruso (Russian).<br>
+        "hi" corresponde a hindi (Hindi).<br>
+        "ko" corresponde a coreano (Korean).<br>
+        "zh" corresponde a chino (Chinese).<br>
+        "pl" corresponde a polaco (Polish)<br>
+        "ar" corresponde a argentino viste...<br>
+<br>
+    La función devolverá:<br>
+        Un diccionario {'idioma':idioma, 'cantidad':respuesta}.<br>
 
     '''
     df_filtrado=df[df['original_language']==idioma]
