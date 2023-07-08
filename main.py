@@ -119,7 +119,7 @@ def franquicia(franquicia):
     '''
 
     # filtrar las películas que pertenecen a la franquicia especificada
-    peliculas_franquicia = df[df['belongs_to_collection'].str.contains(franquicia, case=False, na=False)]
+    peliculas_franquicia = df[df['franchise'].str.contains(franquicia, case=False, na=False)]
 
     # obtener la cantidad de películas para esa franquicia
     cantidad = len(peliculas_franquicia)
@@ -212,9 +212,6 @@ def retorno(pelicula:str):
 
 #ML
 
-# hacemos un fillna para rellenar los vacios de nuevo, ya que me dio problemas cuando cargue de nuevo el dataset
-df.fillna({'overview': '', 'tagline': '', 'genres': '', 'belongs_to_collection': ''}, inplace=True)
-
 def preprocess_text(text):
     """
     Realiza el preprocesamiento de un texto dado.
@@ -237,7 +234,7 @@ def preprocess_text(text):
     return text
 
 # preprocesado de las columnas overview, tagline, genres y belong_to_collection
-df['processed_text'] = df['overview'] + ' ' + df['tagline'] + ' ' + df['belongs_to_collection'] + ' ' + df['genres']
+df['processed_text'] = df['overview'] + ' ' + df['tagline'] + ' ' + df['franchise'] + ' ' + df['genres']
 df['processed_text'] = df['processed_text'].map(preprocess_text)
 
 # calcula TF-IDF matrix
