@@ -71,6 +71,11 @@ def peliculas_duracion(pelicula:str):
     # Filtramos las filas con el título especificado
     df_filtrado = df[df['title'].str.contains(pelicula, case=False)]
 
+    # Verificamos si hay resultados
+    if len(df_filtrado) == 0:
+        mensaje_error = {'error': f'No se encontró ninguna película que contenga la palabra "{texto}"'}
+        return mensaje_error
+
     # Iteramos sobre las filas filtradas y agregamos los datos solicitados en el ejercicio
     for indice, fila in df_filtrado.iterrows():
         resultado = {'titulo':fila['title'], 'duracion':fila['runtime'], 'anno':fila['release_year']}
