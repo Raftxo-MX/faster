@@ -16,6 +16,12 @@ df = pd.read_csv('./datos_limpios.csv')
 
 @app.get('/')
 def index():   
+    """
+    尺闩ﾁ七〤ㄖ ﾁ闩丂セ 闩尸讠<br>
+    Implementación de la API con FastAPI en Render<br>
+    PI01_MLops DTS-12<br>
+    Rafa J.W.
+    """
     return {   'message': '尺闩ﾁ七〤ㄖ ﾁ闩丂セ 闩尸讠',
            'description': 'Implementación de la API con FastAPI en Render',
           'organization': 'soyHENRY.com',
@@ -54,6 +60,23 @@ def peliculas_idioma(idioma:str):
   
     return respuesta
 
+@app.get('/peliculas_duracion/{pelicula}')
+def peliculas_duracion(pelicula:str):
+    '''
+    Ingresas un título de una pelicula y verás su duración en minutos y el año de estreno.
+    '''
+    # Creamos una lista vacía par almacenar los resultados
+    resultados=[]
+
+    # Filtramos las filas con el título especificado
+    df_filtrado = df[df['title'].str.contains(pelicula, case=False)]
+
+    # Iteramos sobre las filas filtradas y agregamos los datos solicitados en el ejercicio
+    for indice, fila in df_filtrado.iterrows():
+        resultado = {'titulo':fila['title'], 'duracion':fila['runtime'], 'anno':fila['release_year']}
+        resultados.append(resultado)
+
+    return resultados
 
 @app.get('/franquicia/{franquicia}')
 def franquicia(franquicia):
@@ -113,18 +136,15 @@ def peliculas_pais(pais):
     return {'pais': pais.title(), 'cantidad': cantidad}
 
 
-@app.get('/productoras/{productora}')
+@app.get('/productoras_exitosas/{productora}')
 def productoras(productora:str):
     '''
-    Retorna la ganancia total y la cantidad de películas producidas por una productora específica.
+    Ingresa la productora para ver su revenue total y la cantidad de películas que realizó.
 
-    Args:
-        productora (str): El nombre de la productora.
+    Algunas productoras famosas:  <br>
 
-    Returns:
-        dict: Un diccionario que contiene el nombre de la productora (en formato capitalizado), 
-        la ganancia total de las películas producidas por la productora formateada con separadores de miles,
-        y la cantidad de películas producidas por la productora.
+
+    return {'productora':productora, 'revenue_total':X, 'cantidad':Y}
     
     '''
 
