@@ -11,7 +11,7 @@ app = FastAPI()
 
 
 # cargo el dataset limpio
-df = pd.read_feather('datos_limpios.feather')
+df = pd.read_csv('./datos_limpios.csv')
 
 
 @app.get('/')
