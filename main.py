@@ -62,25 +62,39 @@ def peliculas_idioma(idioma:str):
 
 @app.get('/peliculas_duracion/{pelicula}')
 def peliculas_duracion(pelicula:str):
-    '''
-    Ingresas un título de una pelicula y verás su duración en minutos y el año de estreno.
-    '''
-    # Creamos una lista vacía par almacenar los resultados
-    resultados=[]
+    """
+    Ingresa un título o parte del título y la API devolverá<br>
+    ese título con su duración y año de estreno (o varios)<br>
+    """
 
-    # Filtramos las filas con el título especificado
-    df_filtrado = df[df['title'].str.contains(pelicula, case=False)]
-
-    # Verificamos si hay resultados
-    if len(df_filtrado) == 0:
-        mensaje_error = {'error': f'No se encontró ninguna película que contenga la palabra "{texto}"'}
+    # Verificar que se proporcione al menos un carácter como argumento
+    if len(pelicula.strip()) == 0:
+        mensaje_error = {'error': 'Debe proporcionar al menos un carácter para buscar'}
         return mensaje_error
-
-    # Iteramos sobre las filas filtradas y agregamos los datos solicitados en el ejercicio
+    
+    # Escapar la cadena de búsqueda para evitar errores de expresión regular
+    pelicula_escaped = re.escape(pelicula)
+    
+    # Crear una lista vacía para almacenar los resultados
+    resultados = []
+    
+    # Filtrar las filas que contienen el texto especificado en el título
+    df_filtrado = df[df['title'].str.contains(pelicula_escaped, case=False)]
+    
+    # Verificar si hay resultados
+    if len(df_filtrado) == 0:
+        mensaje_error = {'error': f'No se encontró ninguna película que contenga la palabra "{pelicula}"'}
+        return mensaje_error
+    
+    # Iterar sobre las filas filtradas y agregar un diccionario de resultados para cada una
     for indice, fila in df_filtrado.iterrows():
-        resultado = {'titulo':fila['title'], 'duracion':fila['runtime'], 'anno':fila['release_year']}
+        # Agregar un máximo de 10 resultados
+        if len(resultados) == 10:
+            break
+        resultado = {'titulo': fila['title'], 'duracion': fila['runtime'], 'anio_lanzamiento': fila['release_year']}
         resultados.append(resultado)
-
+    
+    # Devolver la lista de resultados
     return resultados
 
 @app.get('/franquicia/{franquicia}')
