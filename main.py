@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 import pandas as pd
+import re
 from unidecode import unidecode
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
