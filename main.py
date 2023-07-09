@@ -26,7 +26,7 @@ def index():
                'student': 'Rafal Janusz Wysocki',
            'mail/github': 'raftxo.mx@gmail.com',
              'docs link': './docs',
-'example function peliculas_duracion': './peliculas_duracion/What%20the%20%23%24%2A%21%20Do%20We%20%28K%29now%21%3F',
+'example function peliculas_duracion': 'https://fastapirender.onrender.com/peliculas_duracion/What%20the%20%23%24%2A%21%20Do%20We%20%28K%29now%21%3F',
            }
 
 # ENDPOINT PELICULAS_IDIOMA
