@@ -209,5 +209,27 @@ def retorno(pelicula:str):
     return {'pelicula': pelicula.title(), 'inversion': f'{inversion:,}', 'ganancia': f'{ganancia:,}', 'retorno': f'{retorno:,}', 'anio': anio}
 
 
-# ML - to do
+# ML - el modelo se hizo en ML_pi01_dts12.ipynb
+#      exportando las recomendaciones a un fichero CSV
 
+# Cargamos el archivo df_recomendaciones.csv como un dataframe
+df_recomendaciones = pd.read_csv('df_recomendaciones.csv')
+
+# ENDPOINT RECOMENDACION
+def recomendacion(titulo):
+    """
+    Introduce un título de una película.<br>
+    La función devolverá 5 títulos de películas recomendadas.
+    """
+    # Buscar el título en el dataframe
+    filtro = df_recomendaciones['title'] == titulo
+    if filtro.any():
+        # Obtener las recomendaciones para el título dado
+        recomendaciones = df_recomendaciones.loc[filtro, 'recomendaciones'].values[0]
+        return {'lista recomendada': recomendaciones}
+    else:
+        return {'error': 'El título no se encuentra en la base de datos'}
+ # Ejemplo de uso de la función
+titulo_pelicula = 'Título de la película'
+resultado = recomendacion(titulo_pelicula)
+print(resultado)
