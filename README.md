@@ -1,6 +1,6 @@
 ## faster
 ### fastAPI RENDer
-Primeras pruebas de deployement of API  
+Despliegue de la API relacionada con el Proyecto Individual (https://github.com/Raftxo-MX/PI_ML_OPS)
 
 >Hagan sus pruebas con el título: What the #$*! Do We (K)now!?
 
