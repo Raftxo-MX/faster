@@ -216,6 +216,7 @@ def retorno(pelicula:str):
 df_recomendaciones = pd.read_csv('recomendaciones.csv')
 
 # ENDPOINT RECOMENDACION
+@app.get('/recomendacion/{titulo}')
 def recomendacion(titulo):
     """
     Introduce un título de una película.<br>
