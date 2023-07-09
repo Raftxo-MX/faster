@@ -71,7 +71,7 @@ def peliculas_duracion(pelicula:str):
     # Verificar que se proporcione al menos un carácter como argumento
     if len(pelicula.strip()) == 0:
         mensaje_error = {'error': 'Debe proporcionar al menos un carácter para buscar'}
-        return mensaje_error
+        return mensaje_error, 400
     
     # Escapar la cadena de búsqueda para evitar errores de expresión regular
     pelicula_escaped = re.escape(pelicula)
@@ -85,7 +85,10 @@ def peliculas_duracion(pelicula:str):
     # Verificar si hay resultados
     if len(df_filtrado) == 0:
         mensaje_error = {'error': f'No se encontró ninguna película que contenga la palabra "{pelicula}"'}
-        return mensaje_error
+        return mensaje_error, 404
+    
+    # Convertir los valores "nan" del campo "runtime" a una cadena vacía
+    df_filtrado['runtime'] = df_filtrado['runtime'].fillna('')
     
     # Iterar sobre las filas filtradas y agregar un diccionario de resultados para cada una
     for indice, fila in df_filtrado.iterrows():
@@ -96,7 +99,7 @@ def peliculas_duracion(pelicula:str):
         resultados.append(resultado)
     
     # Devolver la lista de resultados
-    return resultados
+    return resultados, 200
 
 # ENDPOINT FRANQUICIA
 @app.get('/franquicia/{franquicia}')
