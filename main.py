@@ -25,7 +25,7 @@ def index():
                 'cohort': 'DTS-12',
                'student': 'Rafal Janusz Wysocki',
            'mail/github': 'raftxo.mx@gmail.com',
-             'docs link': './docs',
+             'docs link': 'https://fastapirender.onrender.com/docs',
 'example function peliculas_duracion': 'https://fastapirender.onrender.com/peliculas_duracion/What%20the%20%23%24%2A%21%20Do%20We%20%28K%29now%21%3F',
            }
 
