@@ -92,7 +92,7 @@ def peliculas_duracion(pelicula:str):
         # Agregar un máximo de 10 resultados
         if len(resultados) == 10:
             break
-        resultado = {'titulo': fila['title'], 'duracion (minutos)': fila['runtime'], 'anio_lanzamiento': fila['release_year']}
+        resultado = {'título': fila['title'], 'duración (minutos)': fila['runtime'], 'año lanzamiento': fila['release_year']}
         resultados.append(resultado)
     
     # Devolver la lista de resultados
