@@ -213,7 +213,7 @@ def retorno(pelicula:str):
 #      exportando las recomendaciones a un fichero CSV
 
 # Cargamos el archivo df_recomendaciones.csv como un dataframe
-df_recomendaciones = pd.read_csv('df_recomendaciones.csv')
+df_recomendaciones = pd.read_csv('recomendaciones.csv')
 
 # ENDPOINT RECOMENDACION
 def recomendacion(titulo):
