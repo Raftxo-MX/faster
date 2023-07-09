@@ -1,20 +1,14 @@
 from fastapi import FastAPI
 import pandas as pd
+import numpy as np
 import re
-from unidecode import unidecode
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.metrics.pairwise import linear_kernel
-from datetime import datetime
-import scipy.sparse as sp
-
 
 app = FastAPI()
-
 
 # cargo el dataset limpio
 df = pd.read_csv('./datos_limpios.csv')
 
-
+# ENDPOINT INICIO API
 @app.get('/')
 def index():   
     """
@@ -33,6 +27,7 @@ def index():
            'mail/github': 'raftxo.mx@gmail.com', 
            }
 
+# ENDPOINT PELICULAS_IDIOMA
 @app.get('/peliculas_idioma/{idioma}')
 def peliculas_idioma(idioma:str):
     '''
@@ -61,11 +56,12 @@ def peliculas_idioma(idioma:str):
   
     return respuesta
 
+# ENDPOINT PELICULAS_DURACION
 @app.get('/peliculas_duracion/{pelicula}')
 def peliculas_duracion(pelicula:str):
     """
     Ingresa un título o parte del título y la API devolverá<br>
-    ese título con su duración y año de estreno (o varios)<br>
+    ese título (o varios) con su duración y año de estreno<br>
     """
 
     # Verificar que se proporcione al menos un carácter como argumento
@@ -98,6 +94,7 @@ def peliculas_duracion(pelicula:str):
     # Devolver la lista de resultados
     return resultados
 
+# ENDPOINT FRANQUICIA
 @app.get('/franquicia/{franquicia}')
 def franquicia(franquicia):
     '''
@@ -119,7 +116,7 @@ def franquicia(franquicia):
 
     return {'franquicia': franquicia.title(), 'cantidad': cantidad, 'ganancia_total': f'{ganancia_total:,}', 'ganancia_promedio': f'{ganancia_promedio:,}'}
 
-
+# ENDPOINT PELICULAS_PAIS
 @app.get('/peliculas_pais/{pais}')
 def peliculas_pais(pais):
     '''
@@ -135,7 +132,7 @@ def peliculas_pais(pais):
 
     return {'pais': pais.title(), 'cantidad': cantidad}
 
-
+# ENDPOINT PRODUCTORAS_EXITOSAS
 @app.get('/productoras_exitosas/{productora}')
 def productoras_exitosas(productora:str):
     '''
@@ -156,6 +153,7 @@ def productoras_exitosas(productora:str):
 
     return {'productora': productora.title(), 'revenue_total': f'{ganancia_total:,}', 'cantidad': cantidad}
 
+# ENDPOINT GET_DIRECTOR
 @app.get('/get_director/{nombre_director}')
 def get_director(nombre_director: str):
     """
@@ -168,13 +166,13 @@ def get_director(nombre_director: str):
     
     """
     # Filtramos el DataFrame por el nombre del director ingresado
-    pelis_del_director = df[df['directed_by'] == nombre_director]
+    pelis_del_director = df[df['directed_by'].str.contains(nombre_director, case=False, na=False)]
 
     if pelis_del_director.empty:
         return f"No se encontraron películas dirigidas por {nombre_director}."
 
     # Limpiamos los valores 'N/A' y reemplazamos los valores 'inf' y 'nan' en el DataFrame
-    pelis_del_director = pelis_del_director.replace({'N/A': df.nan, df.inf: df.nan})
+    pelis_del_director = pelis_del_director.replace({'N/A': np.nan, np.inf: np.nan})
 
     # Calculamos el promedio de éxito de las películas del director sin considerar los valores NaN
     exito_director = pelis_del_director['return'].mean(skipna=True)
