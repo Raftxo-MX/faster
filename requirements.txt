@@ -1,6 +1,3 @@
 fastapi
 pandas
-scikit-learn
-scipy
-Unidecode
 uvicorn
