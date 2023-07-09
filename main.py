@@ -101,23 +101,10 @@ def peliculas_duracion(pelicula:str):
 @app.get('/franquicia/{franquicia}')
 def franquicia(franquicia):
     '''
-    Retorna la cantidad de películas, ganancia total y ganancia promedio para una franquicia específica.
+    Ingresar la franquicia (no hace falta poner Collection)<br>
 
-    Args:
-        franquicia (str): El nombre de la franquicia de películas.
-
-    Returns:
-        dict: Un diccionario que contiene el nombre de la franquicia (en formato capitalizado), 
-        la cantidad de películas en la franquicia,
-        la ganancia total de la franquicia formateada con separadores de miles, 
-        y la ganancia promedio de la franquicia formateada con separadores de miles.
-
-        ['index', 'id', 'budget', 'original_language', 'overview', 'popularity',
-       'release_date', 'revenue', 'runtime', 'spoken_languages', 'status',
-       'tagline', 'title', 'vote_average', 'vote_count', 'return',
-       'release_year', 'directed_by', 'franchise', 'produced_by',
-       'produced_in', 'genres_clean']
-    
+    Devuelve la cantidad de películas en dicha franquicia, ganancia total y promedio.
+   
     '''
 
     # filtrar las películas que pertenecen a la franquicia especificada
@@ -138,13 +125,6 @@ def peliculas_pais(pais):
     '''
     Retorna la cantidad de películas producidas en un país específico.
 
-    Args:
-        pais (str): El nombre del país.
-
-    Returns:
-        dict: Un diccionario que contiene el nombre del país (en formato capitalizado) y 
-        la cantidad de películas producidas en ese país.
-
     '''
 
     # filtrar las películas producidas en el país especificado
@@ -157,62 +137,62 @@ def peliculas_pais(pais):
 
 
 @app.get('/productoras_exitosas/{productora}')
-def productoras(productora:str):
+def productoras_exitosas(productora:str):
     '''
-    Ingresa la productora para ver su revenue total y la cantidad de películas que realizó.
+    Ingresar una productora<br>
+    (Algunas productoras famosas: 'Warner Bros','TriStar Pictures')<br>
 
-    Algunas productoras famosas:  <br>
-
-
-    return {'productora':productora, 'revenue_total':X, 'cantidad':Y}
-    
+    Devuelve revenue total y la cantidad de películas que realizó.
+   
     '''
 
-# filtrar el DataFrame por las filas que contienen la productora especificada en la columna 'produced_by'
+    # filtrar el DataFrame por las filas que contienen la productora especificada en la columna 'produced_by'
     filtered_df = df[df['produced_by'].str.contains(productora, case=False, na=False)]
 
     
-    # calcular el total de 'revenue' y se cuenta el numero de peliculas 
+    # calcular el total de 'revenue' y el numero de peliculas
     ganancia_total = filtered_df['revenue'].sum()
     cantidad = filtered_df.shape[0] 
 
-    return {'productora': productora.title(), 'ganancia_total': f'{ganancia_total:,}', 'cantidad': cantidad}
+    return {'productora': productora.title(), 'revenue_total': f'{ganancia_total:,}', 'cantidad': cantidad}
 
-@app.get('/retorno/{pelicula}')
-def retorno(pelicula:str):
+@app.get('/get_director/{nombre_director}')
+def get_director(nombre_director: str):
     """
-    Retorna información sobre una película específica.
+    Ingresar el nombre de un director incluído en el dataset.<br>
 
-    Args:
-        pelicula (str): El título de la película.
+    Devuelve el éxito del mismo medido a través del retorno.<br>
 
-    Returns:
-        dict: Un diccionario con los siguientes valores:
-            - 'pelicula' (str): El título de la película en formato capitalizado.
-            - 'inversion' (str): La inversión de la película formateada con separadores de miles.
-            - 'ganancia' (str): La ganancia de la película formateada con separadores de miles.
-            - 'retorno' (str): El retorno de la película redondeado a 2 decimales y formateado con separadores de miles.
-            - 'anio' (int): El año en el que se lanzó la película.
-
+    Además devuelve el nombre de cada película con su fecha de lanzamiento, retorno individual,
+    costo y ganancia de la misma en formato lista.
+    
     """
-    
+    # Filtramos el DataFrame por el nombre del director ingresado
+    pelis_del_director = df[df['directed_by'] == nombre_director]
 
-    # filtrar el DataFrame por el título de la película especificada
-    pelicula_filtrada = df[df['title'].str.contains(pelicula, case=False, na=False)]
+    if pelis_del_director.empty:
+        return f"No se encontraron películas dirigidas por {nombre_director}."
 
-    # obtener los valores de inversión, ganancia, retorno y año de lanzamiento
-    inversion = pelicula_filtrada['budget'].values[0]
-    ganancia = pelicula_filtrada['revenue'].values[0]
-    retorno = round(pelicula_filtrada['return'].values[0],2)
-    anio = int(pelicula_filtrada['release_year'].values[0])
-    
-    return {'pelicula': pelicula.title(), 'inversion': f'{inversion:,}', 'ganancia': f'{ganancia:,}', 'retorno': f'{retorno:,}', 'anio': anio}
+    # Limpiamos los valores 'N/A' y reemplazamos los valores 'inf' y 'nan' en el DataFrame
+    pelis_del_director = pelis_del_director.replace({'N/A': df.nan, df.inf: df.nan})
+
+    # Calculamos el promedio de éxito de las películas del director sin considerar los valores NaN
+    exito_director = pelis_del_director['return'].mean(skipna=True)
+
+    # Limitamos la cantidad de películas a devolver
+    max_movies = 10  # Se puede ajustar este valor según tus necesidades
+    pelis_del_director = pelis_del_director.head(max_movies)
+
+    # Crea una lista de películas dirigidas por el director
+    lista_pelis = pelis_del_director[['title', 'release_date', 'return', 'budget', 'revenue']].to_dict(orient='records')
+
+    return {'director_success': exito_director, 'lista_peliculas': lista_pelis}
 
 
 # ML - el modelo se hizo en ML_pi01_dts12.ipynb
 #      exportando las recomendaciones a un fichero CSV
 
-# Cargamos el archivo df_recomendaciones.csv como un dataframe
+# Cargamos el archivo recomendaciones.csv como un dataframe
 df_recomendaciones = pd.read_csv('recomendaciones.csv')
 
 # ENDPOINT RECOMENDACION
