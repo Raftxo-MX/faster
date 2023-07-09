@@ -24,7 +24,9 @@ def index():
                'project': 'PI01_MLops',
                 'cohort': 'DTS-12',
                'student': 'Rafal Janusz Wysocki',
-           'mail/github': 'raftxo.mx@gmail.com', 
+           'mail/github': 'raftxo.mx@gmail.com',
+             'docs link': './docs',
+'example function peliculas_duracion': './peliculas_duracion/What%20the%20%23%24%2A%21%20Do%20We%20%28K%29now%21%3F',
            }
 
 # ENDPOINT PELICULAS_IDIOMA
@@ -62,6 +64,8 @@ def peliculas_duracion(pelicula:str):
     """
     Ingresa un título o parte del título y la API devolverá<br>
     ese título (o varios) con su duración y año de estreno<br>
+    Por razones de eficiencia se devuelven máximo 10 películas que contengan el string buscado.<br>
+    Si su película no está en la lista de las 10 primeras, refine más las palabras a buscar.
     """
 
     # Verificar que se proporcione al menos un carácter como argumento
@@ -163,6 +167,9 @@ def get_director(nombre_director: str):
 
     Además devuelve el nombre de cada película con su fecha de lanzamiento, retorno individual,
     costo y ganancia de la misma en formato lista.
+
+    Ojo que en caso de introducir un nombre incompleto, por ejemplo 'Richard' se devolverán datos 
+    pero de varios directores con el nombre 'Richard' mezclándo sus películas y ganancias.
     
     """
     # Filtramos el DataFrame por el nombre del director ingresado
