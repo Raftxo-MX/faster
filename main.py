@@ -215,7 +215,5 @@ def recomendacion(titulo):
         return {'lista recomendada': recomendaciones}
     else:
         return {'error': 'El título no se encuentra en la base de datos'}
- # Ejemplo de uso de la función
-titulo_pelicula = 'Título de la película'
-resultado = recomendacion(titulo_pelicula)
-print(resultado)
+
+print('Mensaje oculto de Raftxo')
